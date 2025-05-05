@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: ChangeNotifierProvider(
         create: (_) => CounterProvider(),
-        child: HomePage(),
+        child: const HomePage(),
       ),
     );
   }
@@ -28,27 +28,48 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text('Home')),
-        body: Center(
-          child: Text(
-            '${context.watch<CounterProvider>().getCount()}',
-            style: const TextStyle(fontSize: 25),
+        body: SafeArea(
+          child: Center(
+            child: Consumer<CounterProvider>(
+              builder: (ctx,_,__){
+
+                return Text(
+                  // '${Provider.of<CounterProvider>(ctx,listen: true).getCount()}',
+                  '${ctx.watch<CounterProvider>().getCount()}',
+                  style: const TextStyle(fontSize: 25),
+                );
+              },
+            )
           ),
         ),
-        bottomNavigationBar: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            ElevatedButton(
-                onPressed: () {
-                  context.read<CounterProvider>().incrementCount();
-                },
-                child: const Text('Add')),
-            ElevatedButton(
-                onPressed: () {
-                  context.read<CounterProvider>().decrementCount();
-                },
-                child: const Text('Sub')),
-          ],
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              ElevatedButton(
+                  onPressed: () {
+                    // Provider.of<CounterProvider>(context,listen: false).incrementCount(); //old way (need to pass listen false else error)
+
+                    context.read<CounterProvider>().incrementCount();
+
+                  },
+                  child: const Text('Add',style: TextStyle(color: Colors.white)),
+                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.green),),
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    // Provider.of<CounterProvider>(context,listen: false).decrementCount();
+                    context.read<CounterProvider>().decrementCount();
+
+
+                  },
+                  child: const Text('Sub',style: TextStyle(color: Colors.white),),
+                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.redAccent),),
+              ),
+            ],
+          ),
         ));
   }
 }
