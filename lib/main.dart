@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_basic/counter_provider.dart';
+import 'package:flutter_basic/list_map_provider.dart';
+import 'package:flutter_basic/list_page.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ListMapProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -12,11 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ChangeNotifierProvider(
-        create: (_) => CounterProvider(),
-        child: const HomePage(),
-      ),
+      home: const ListPage(),
     );
   }
 }
